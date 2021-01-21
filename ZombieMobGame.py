@@ -8,6 +8,7 @@ import sqlite3
 conn = sqlite3.connect('./final/game.db', isolation_level=None)
 c = conn.cursor()
 
+#테이블 생성
 c.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, rectime text, regdate text)")
 
 def calc_velocity(direction, vel=1.0):

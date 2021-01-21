@@ -7,8 +7,8 @@ from pygame.locals import *
 class GameUser:
     def __init__(self, user):
         self.user = user
-        
-    #입장 알림
+
+    # 게임 유저입장 알림
     def user_info(self):
         print("User : {}님이 입장하였습니다.".format(self.user))
         print()
