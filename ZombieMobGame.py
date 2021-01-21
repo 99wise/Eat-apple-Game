@@ -167,9 +167,11 @@ while True:
         attacker = pygame.sprite.spritecollideany(player, food_group)
         if attacker != None:
             if pygame.sprite.collide_circle_ratio(0.65)(player,attacker):
-                player_health +=2
-                food_group.remove(attacker)
                 winsound.PlaySound('C:\\Users\\with1\\Downloads\\f\\사과먹는+소리.wav', winsound.SND_FILENAME)
+                player_health +=2
+                
+                food_group.remove(attacker)
+                
         if player_health > 100: player_health = 100
         #푸드 요정 팀 업데이트
         food_group.update(ticks, 50)
