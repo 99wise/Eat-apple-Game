@@ -16,8 +16,6 @@ def calc_velocity(direction, vel=1.0):
         velocity.x = -vel
     return velocity
 
-<<<<<<< HEAD
-=======
 def reverse_direction(sprite):
     if sprite.direction == 0:
         sprite.direction = 4
@@ -29,7 +27,6 @@ def reverse_direction(sprite):
         sprite.direction = 2
 
 start = time.time()
->>>>>>> origin/jung
 pygame.init()
 screen = pygame.display.set_mode((800,600))
 pygame.display.set_caption("Apple Licker")
@@ -97,9 +94,9 @@ while True:
             #버튼(인물이 이동하는 것을 멈출 때)을 멈추고 애니메이션 프레임 업데이트를 중단합니다
             player.frame = player.first_frame = player.last_frame
         else: 
-            player.velocity = calc_velocity(player.direction, 1.5)
-            player.velocity.x *= 1.5
-            player.velocity.y *= 1.5
+            player.velocity = calc_velocity(player.direction, 2)
+            player.velocity.x *= 2
+            player.velocity.y *= 2
 
         #게이머 마법사 그룹 업데이트
         player_group.update(ticks, 50)
