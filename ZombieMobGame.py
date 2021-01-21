@@ -123,6 +123,7 @@ while True:
 
         if len(food_group) == 0:
             game_over = True
+            
     #텔레비전 화면을 깨끗이 하다
     screen.fill((50,50,100))
 
