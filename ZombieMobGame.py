@@ -20,6 +20,8 @@ pygame.display.set_caption("Apple Licker")
 font = pygame.font.Font(None, 36)
 timer = pygame.time.Clock()
 
+player_group = pygame.sprite.Group()
+food_group = pygame.sprite.Group()
 potion_group = pygame.sprite.Group()
 
 #게이머 마법사 그룹 초기화
@@ -30,11 +32,11 @@ player.direction = 4
 player_group.add(player)
 
 #포션 이미지 추가
-potion = MySprite()
-potion.load("potion.png",65,65,15)
-potion.position = random.randint(0,780),random.randint(0,580)
-potion.direction = 1
-potion_group.add(potion)
+for n in range(1,50):
+    potion = MySprite()
+    potion.load("potion.png",65,65,15)
+    potion.position = random.randint(0,780),random.randint(0,580)
+    potion_group.add(potion)
 
 #초기화 음식요정그룹
 
