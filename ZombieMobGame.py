@@ -1,4 +1,4 @@
-import itertools, sys, time, random, math, pygame
+﻿import itertools, sys, time, random, math, pygame
 from pygame.locals import *
 from MyLibrary import *
 import random
@@ -72,13 +72,13 @@ player_moving = False
 player_health = 0.1
 zombie_moving = False
 
-#걸린 시간, 날짜
+#걸린 시간, 날짜 
 
 if True:
-    id = input("Ready? Input Your name>> ")
-    user = GameUser(id)
-    user.user_info()
-    start = time.time()
+    id = input("Ready? Input Your name>> ")             
+    user = GameUser(id)                     
+    user.user_info() 
+    start = time.time()   
 
 while True:
     timer.tick(30)
@@ -87,7 +87,7 @@ while True:
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
-            sys.exit()
+            sys.exit()     
     keys = pygame.key.get_pressed()
     if keys[K_ESCAPE]: sys.exit()
     elif keys[K_UP]:
@@ -139,7 +139,7 @@ while True:
         if not player_moving:
             #버튼(인물이 이동하는 것을 멈출 때)을 멈추고 애니메이션 프레임 업데이트를 중단합니다
             player.frame = player.first_frame = player.last_frame
-        else:
+        else: 
             player.velocity = calc_velocity(player.direction, 2)
             player.velocity.x *= 10
             player.velocity.y *= 10
@@ -148,7 +148,7 @@ while True:
         if not zombie_moving:
             #버튼(인물이 이동하는 것을 멈출 때)을 멈추고 애니메이션 프레임 업데이트를 중단합니다
             zombie.frame = zombie.first_frame = zombie.last_frame
-        else:
+        else: 
             zombie.velocity = calc_velocity(zombie.direction, 2)
             zombie.velocity.x *= 2
             zombie.velocity.y *= 2
