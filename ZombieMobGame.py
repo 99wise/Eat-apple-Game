@@ -3,8 +3,12 @@ from pygame.locals import *
 from MyLibrary import *
 import random
 import datetime
+import sqlite3
 
+conn = sqlite3.connect('./final/game.db', isolation_level=None)
+c = conn.cursor()
 
+c.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, rectime text, regdate text)")
 
 def calc_velocity(direction, vel=1.0):
     velocity = Point(0,0)
@@ -51,7 +55,10 @@ player_health = 0
 
 
 while True:
-    
+    id = input("Ready? Input Your name>> ")             
+    user = GameUser(id)                     
+    user.user_info()
+
     start = time.time()
     timer.tick(30)
     ticks = pygame.time.get_ticks()
@@ -134,9 +141,11 @@ while True:
         end = time.time()
         et = end -start
         et = format(et,"2f")
-        print_text(font, 300, 100, "시간: {0}초".format(et))
+        print_text(font, 300, -300, "시간: {0}초".format(et))
 
-        
+        c.execute("INSERT INTO users (id, rectime, regdate) VALUES(?,?,?,?,?,?)",(id, et, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+
+        c.close()
     
     pygame.display.update()
     
