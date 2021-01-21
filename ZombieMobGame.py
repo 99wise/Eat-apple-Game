@@ -43,24 +43,21 @@ player_group = pygame.sprite.Group()
 food_group = pygame.sprite.Group()
 zombie_group = pygame.sprite.Group()
 
-# larva_group = pygame.sprite.Group()
-# potion_group = pygame.sprite.Group()
-
-#게이머 마법사 그룹 초기화
+#player 초기화
 player = MySprite()
 player.load("farmer walk.png", 96, 96, 8)
 player.position = 80, 80
 player.direction = 4
 player_group.add(player)
 
+#좀비 초기화
 zombie = MySprite()
 zombie.load("zombie walk.png", 96, 96, 8)
 zombie.position = random.randint(0,780),random.randint(0,580)
 player.direction = 4
 zombie_group.add(zombie)
 
-#초기화 음식요정그룹
-
+#사과 초기화
 for n in range(1,50):
     food = MySprite()
     food.load("food_low.png", 35, 35, 1)
@@ -89,6 +86,8 @@ while True:
             pygame.quit()
             sys.exit()     
     keys = pygame.key.get_pressed()
+
+    #player키
     if keys[K_ESCAPE]: sys.exit()
     elif keys[K_UP]:
         player.direction = 0
@@ -105,6 +104,7 @@ while True:
     else:
         player_moving = False
 
+    #좀비키
     if keys[K_ESCAPE]: sys.exit()
     elif keys[K_w]:
         zombie.direction = 0
@@ -166,6 +166,7 @@ while True:
             if player.Y < 0: player.Y = 0
             elif player.Y > 500: player.Y = 500
 
+        #좀비 플레이어
         if zombie_moving:
             zombie.X += zombie.velocity.x
             zombie.Y += zombie.velocity.y
@@ -188,10 +189,12 @@ while True:
         if huzom != None:
             if pygame.sprite.collide_circle_ratio(0.25)(player,huzom):
                 player_health -= 5
+                screen.fill((55,84,34))
         if player_health > 100: player_health = 100
 
         #푸드 요정 팀 업데이트
         food_group.update(ticks, 50)
+
 
         if len(food_group) == 0:
             game_over = True
@@ -200,12 +203,13 @@ while True:
             
 
     #텔레비전 화면을 깨끗이 하다
-    screen.fill((50,50,100))
+    screen.fill((40,0,100))
 
     #요정을 그리다
     food_group.draw(screen)
     player_group.draw(screen)
     zombie_group.draw(screen)
+
 
     #플레이어 혈행 그리기
     pygame.draw.rect(screen, (50,150,50,180), Rect(300,570,player_health*2,25))
@@ -216,10 +220,12 @@ while True:
         end = time.time()
         et = end -start
         et = format(et,".2f")
-        print_text(font, 300, 0, "시간: {0}초".format(et))
+        print_text(font, 300, 0, "time : {0} sec".format(et))
 
         c.execute("INSERT INTO users (name, rectime, regdate) VALUES(?,?,?)",(user_name, et, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+
         c.close()
+        conn.close()
         
     pygame.display.update()
     
