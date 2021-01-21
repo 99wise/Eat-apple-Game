@@ -26,7 +26,7 @@ def reverse_direction(sprite):
     elif sprite.direction == 6:
         sprite.direction = 2
 
-start = time.time()
+
 pygame.init()
 screen = pygame.display.set_mode((800,600))
 pygame.display.set_caption("吃苹果")
@@ -68,6 +68,7 @@ player_health = 0
 
 
 while True:
+    start = time.time()
     timer.tick(30)
     ticks = pygame.time.get_ticks()
 
@@ -173,7 +174,7 @@ while True:
         end = time.time()
         et = end -start
         et = format(et,"2f")
-        print("시간: ",et,"초")
+        print_text(font, 300, 100, "시간: ", et,"초")
     
     pygame.display.update()
     
