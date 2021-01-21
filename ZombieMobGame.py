@@ -42,8 +42,6 @@ player_group = pygame.sprite.Group()
 food_group = pygame.sprite.Group()
 zombie_group = pygame.sprite.Group()
 potion_group = pygame.sprite.Group()
-<<<<<<< HEAD
-=======
 
 apple = pygame.mixer.Sound("apple.wav")
 apple.set_volume(0.8)
@@ -54,7 +52,6 @@ rrrou.set_volume(0.8)
 woohoo = pygame.mixer.Sound("woohoo.wav")
 woohoo.set_volume(0.8)
 
->>>>>>> master
 
 #player 초기화
 player = MySprite()
@@ -159,8 +156,8 @@ while True:
             player.frame = player.first_frame = player.last_frame
         else: 
             player.velocity = calc_velocity(player.direction, 2)
-            player.velocity.x *= 4
-            player.velocity.y *= 4
+            player.velocity.x *= 3
+            player.velocity.y *= 3
 
             
         if not zombie_moving:
@@ -168,8 +165,8 @@ while True:
             zombie.frame = zombie.first_frame = zombie.last_frame
         else: 
             zombie.velocity = calc_velocity(zombie.direction, 2)
-            zombie.velocity.x *= 2
-            zombie.velocity.y *= 2
+            zombie.velocity.x *= 4
+            zombie.velocity.y *= 4
 
         #게이머 마법사 그룹 업데이트
         player_group.update(ticks, 50)
@@ -209,10 +206,7 @@ while True:
         if huzom != None:
             if pygame.sprite.collide_circle_ratio(0.25)(player,huzom):
                 player_health -= 3
-<<<<<<< HEAD
-=======
                 rrrou.play()
->>>>>>> master
         if player_health > 100: player_health = 100
 
         if poon != None:
@@ -221,10 +215,7 @@ while True:
                 player.X *= player.velocity.x
                 player.Y *= player.velocity.y
                 potion_group.remove(poon)
-<<<<<<< HEAD
-=======
                 woohoo.play()
->>>>>>> master
 
 
         #푸드 요정 팀 업데이트
@@ -258,7 +249,7 @@ while True:
         print_text(font, 300, 0, "time: {0} sec".format(et))
 
         c.execute("INSERT INTO users (name, rectime, regdate) VALUES(?,?,?)",(user_name, et, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-        c.close()
+        conn.close()
         
     pygame.display.update()
     
