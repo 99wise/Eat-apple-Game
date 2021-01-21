@@ -198,16 +198,22 @@ while True:
                 player_health -= 5
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
                 
 >>>>>>> origin/jieun
 =======
+=======
+>>>>>>> juhui
                 screen.fill((55,84,34))
 >>>>>>> 02c9bea2d2d5f8e3f8493af3ebaf177c654465ad
         if player_health > 100: player_health = 100
 
         #푸드 요정 팀 업데이트
         food_group.update(ticks, 50)
+<<<<<<< HEAD
        
+=======
+>>>>>>> juhui
 
         if len(food_group) == 0:
             game_over = True
@@ -216,7 +222,11 @@ while True:
             
 
     #텔레비전 화면을 깨끗이 하다
+<<<<<<< HEAD
+    screen.fill((55,55,50))
+=======
     screen.fill((40,0,100))
+>>>>>>> 02c9bea2d2d5f8e3f8493af3ebaf177c654465ad
 
     #요정을 그리다
     food_group.draw(screen)
@@ -234,7 +244,14 @@ while True:
         et = end -start
         et = format(et,".2f")
 <<<<<<< HEAD
+<<<<<<< HEAD
         print_text(font, 300, 0, "시간: {0}초".format(et))
+=======
+        print_text(font, 300, 0, "time: {0}sec".format(et))
+
+        c.execute("INSERT INTO users (name, rectime, regdate) VALUES(?,?,?)",(user_name, et, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+        c.close()
+>>>>>>> juhui
 =======
         print_text(font, 300, 0, "time : {0} sec".format(et))
 
