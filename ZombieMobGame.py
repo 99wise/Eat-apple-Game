@@ -5,6 +5,11 @@ import random
 import datetime
 import sqlite3
 
+conn = sqlite3.connect('C:/final/game.db', isolation_level=None)
+c = conn.cursor()
+
+c.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT, name text, rectime text, regdate text)")
+
 def calc_velocity(direction, vel=1.0):
     velocity = Point(0,0)
     if direction == 0: #위
@@ -27,6 +32,7 @@ def reverse_direction(sprite):
     elif sprite.direction == 6:
         sprite.direction = 2
 
+start = time.time()
 pygame.init()
 screen = pygame.display.set_mode((800,600))
 pygame.display.set_caption("Apple Licker")
@@ -38,16 +44,7 @@ food_group = pygame.sprite.Group()
 zombie_group = pygame.sprite.Group()
 
 # larva_group = pygame.sprite.Group()
-potion_group = pygame.sprite.Group()
-
-for k in range(1,3):
-    potion = MySprite()
-    potion.load("potion2.png",32,32,1)
-    potion.positioin = random.randint(0,780),random.randint(0,580)
-    potion_group.add(potion)
-    
-potion_group.draw(screen)
-
+# potion_group = pygame.sprite.Group()
 
 #게이머 마법사 그룹 초기화
 player = MySprite()
@@ -72,10 +69,16 @@ for n in range(1,50):
 
 game_over = False
 player_moving = False
-player_health = 0
-zombie_moving = False
 player_health = 0.1
 zombie_moving = False
+
+#걸린 시간, 날짜 
+
+if True:
+    user_name = input("Ready? Input Your name>> ")             
+    user = GameUser(user_name)                     
+    user.user_info() 
+    start = time.time()   
 
 while True:
     timer.tick(30)
@@ -150,15 +153,6 @@ while True:
             zombie.velocity.x *= 2
             zombie.velocity.y *= 2
 
-            
-        if not zombie_moving:
-            #버튼(인물이 이동하는 것을 멈출 때)을 멈추고 애니메이션 프레임 업데이트를 중단합니다
-            zombie.frame = zombie.first_frame = zombie.last_frame
-        else: 
-            zombie.velocity = calc_velocity(zombie.direction, 2)
-            zombie.velocity.x *= 2
-            zombie.velocity.y *= 2
-
         #게이머 마법사 그룹 업데이트
         player_group.update(ticks, 50)
         zombie_group.update(ticks, 50)
@@ -180,6 +174,7 @@ while True:
             if zombie.Y < 0: zombie.Y = 0
             elif zombie.Y > 500: zombie.Y = 500
 
+ #플레이어가 음식과 충돌하는지, 열매를 먹는지 검사합니다.
         attacker = None
         attacker = pygame.sprite.spritecollideany(player, food_group)
         huzom = None
@@ -198,15 +193,14 @@ while True:
         #푸드 요정 팀 업데이트
         food_group.update(ticks, 50)
 
-
         if len(food_group) == 0:
             game_over = True
         if player_health == 0:
             game_over = True
-
+            
 
     #텔레비전 화면을 깨끗이 하다
-    screen.fill((50,50,100))
+    screen.fill((55,55,50))
 
     #요정을 그리다
     food_group.draw(screen)
@@ -224,6 +218,10 @@ while True:
         end = time.time()
         et = end -start
         et = format(et,".2f")
-        print_text(font, 300, 0, "시간: {0}초".format(et))
+        print_text(font, 300, 0, "time: {0}sec".format(et))
+
+        c.execute("INSERT INTO users (name, rectime, regdate) VALUES(?,?,?)",(user_name, et, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+        c.close()
+        
     pygame.display.update()
     
