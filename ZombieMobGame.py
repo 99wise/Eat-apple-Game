@@ -2,7 +2,13 @@
 from pygame.locals import *
 from MyLibrary import *
 import random
-import time
+import datetime
+import sqlite3
+
+conn = sqlite3.connect('C:/final/game.db', isolation_level=None)
+c = conn.cursor()
+
+c.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT, name text, rectime text, regdate text)")
 
 def calc_velocity(direction, vel=1.0):
     velocity = Point(0,0)
@@ -63,9 +69,16 @@ for n in range(1,50):
 
 game_over = False
 player_moving = False
-player_health = 0
+player_health = 0.1
 zombie_moving = False
 
+#걸린 시간, 날짜 
+
+if True:
+    user_name = input("Ready? Input Your name>> ")             
+    user = GameUser(user_name)                     
+    user.user_info() 
+    start = time.time()   
 
 while True:
     timer.tick(30)
@@ -74,7 +87,7 @@ while True:
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
-            sys.exit()
+            sys.exit()     
     keys = pygame.key.get_pressed()
     if keys[K_ESCAPE]: sys.exit()
     elif keys[K_UP]:
@@ -128,8 +141,8 @@ while True:
             player.frame = player.first_frame = player.last_frame
         else: 
             player.velocity = calc_velocity(player.direction, 2)
-            player.velocity.x *= 2
-            player.velocity.y *= 2
+            player.velocity.x *= 10
+            player.velocity.y *= 10
 
             
         if not zombie_moving:
@@ -161,25 +174,31 @@ while True:
             if zombie.Y < 0: zombie.Y = 0
             elif zombie.Y > 500: zombie.Y = 500
 
-        #플레이어가 음식과 충돌하는지, 열매를 먹는지 검사합니다.
+ #플레이어가 음식과 충돌하는지, 열매를 먹는지 검사합니다.
         attacker = None
         attacker = pygame.sprite.spritecollideany(player, food_group)
+        huzom = None
+        huzom = pygame.sprite.spritecollideany(player, zombie_group)
+
         if attacker != None:
             if pygame.sprite.collide_circle_ratio(0.65)(player,attacker):
                 player_health +=2
                 food_group.remove(attacker)
+
+        if huzom != None:
+            if pygame.sprite.collide_circle_ratio(0.25)(player,huzom):
+                player_health -= 5
         if player_health > 100: player_health = 100
+
         #푸드 요정 팀 업데이트
         food_group.update(ticks, 50)
 
-
         if len(food_group) == 0:
             game_over = True
-<<<<<<< HEAD
+        if player_health == 0:
+            game_over = True
             
-=======
 
->>>>>>> master
     #텔레비전 화면을 깨끗이 하다
     screen.fill((50,50,100))
 
@@ -196,11 +215,13 @@ while True:
 
     if game_over:
         print_text(font, 300, 100, "G A M E   O V E R")
-        # end = time.time()
-        # et = end -start
-        # et = format(et,"2f")
-        # print("시간: ",et,"초")
-    
+        end = time.time()
+        et = end -start
+        et = format(et,".2f")
+        print_text(font, 300, 0, "시간: {0}초".format(et))
+
+        c.execute("INSERT INTO users (name, rectime, regdate) VALUES(?,?,?)",(user_name, et, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+        c.close()
+        
     pygame.display.update()
     
-

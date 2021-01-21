@@ -3,6 +3,15 @@
 import sys, time, random, math, pygame
 from pygame.locals import *
 
+# 게임 유저 클래스 
+class GameUser:
+    def __init__(self, user):
+        self.user = user
+        
+    #입장 알림
+    def user_info(self):
+        print("User : {}님이 입장하였습니다.".format(self.user))
+        print()
 
 # 제공된 글꼴을 사용하여 텍스트 인쇄
 def print_text(font, x, y, text, color=(255,255,255)):
