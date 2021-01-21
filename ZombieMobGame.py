@@ -211,8 +211,6 @@ while True:
     pygame.draw.rect(screen, (50,150,50,180), Rect(300,570,player_health*2,25))
     pygame.draw.rect(screen, (100,200,100,180), Rect(300,570,200,25), 2)
 
-    
-
     if game_over:
         print_text(font, 300, 100, "G A M E   O V E R")
         end = time.time()
