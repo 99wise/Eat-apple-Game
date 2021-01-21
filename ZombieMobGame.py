@@ -2,7 +2,9 @@
 from pygame.locals import *
 from MyLibrary import *
 import random
-import time
+import datetime
+
+
 
 def calc_velocity(direction, vel=1.0):
     velocity = Point(0,0)
@@ -45,8 +47,11 @@ game_over = False
 player_moving = False
 player_health = 0
 
+#걸린 시간, 날짜 
+
 
 while True:
+    
     start = time.time()
     timer.tick(30)
     ticks = pygame.time.get_ticks()
@@ -130,6 +135,8 @@ while True:
         et = end -start
         et = format(et,"2f")
         print_text(font, 300, 100, "시간: {0}초".format(et))
+
+        
     
     pygame.display.update()
     
