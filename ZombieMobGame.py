@@ -2,7 +2,8 @@
 from pygame.locals import *
 from MyLibrary import *
 import random
-import time
+import datetime
+import sqlite3
 
 def calc_velocity(direction, vel=1.0):
     velocity = Point(0,0)
@@ -26,7 +27,6 @@ def reverse_direction(sprite):
     elif sprite.direction == 6:
         sprite.direction = 2
 
-start = time.time()
 pygame.init()
 screen = pygame.display.set_mode((800,600))
 pygame.display.set_caption("Apple Licker")
@@ -38,7 +38,16 @@ food_group = pygame.sprite.Group()
 zombie_group = pygame.sprite.Group()
 
 # larva_group = pygame.sprite.Group()
-# potion_group = pygame.sprite.Group()
+potion_group = pygame.sprite.Group()
+
+for k in range(1,3):
+    potion = MySprite()
+    potion.load("potion2.png",32,32,1)
+    potion.positioin = random.randint(0,780),random.randint(0,580)
+    potion_group.add(potion)
+    
+potion_group.draw(screen)
+
 
 #게이머 마법사 그룹 초기화
 player = MySprite()
@@ -65,7 +74,8 @@ game_over = False
 player_moving = False
 player_health = 0
 zombie_moving = False
-
+player_health = 0.1
+zombie_moving = False
 
 while True:
     timer.tick(30)
@@ -74,7 +84,7 @@ while True:
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
-            sys.exit()
+            sys.exit()     
     keys = pygame.key.get_pressed()
     if keys[K_ESCAPE]: sys.exit()
     elif keys[K_UP]:
@@ -128,8 +138,17 @@ while True:
             player.frame = player.first_frame = player.last_frame
         else: 
             player.velocity = calc_velocity(player.direction, 2)
-            player.velocity.x *= 2
-            player.velocity.y *= 2
+            player.velocity.x *= 10
+            player.velocity.y *= 10
+
+            
+        if not zombie_moving:
+            #버튼(인물이 이동하는 것을 멈출 때)을 멈추고 애니메이션 프레임 업데이트를 중단합니다
+            zombie.frame = zombie.first_frame = zombie.last_frame
+        else: 
+            zombie.velocity = calc_velocity(zombie.direction, 2)
+            zombie.velocity.x *= 2
+            zombie.velocity.y *= 2
 
             
         if not zombie_moving:
@@ -161,25 +180,31 @@ while True:
             if zombie.Y < 0: zombie.Y = 0
             elif zombie.Y > 500: zombie.Y = 500
 
-        #플레이어가 음식과 충돌하는지, 열매를 먹는지 검사합니다.
         attacker = None
         attacker = pygame.sprite.spritecollideany(player, food_group)
+        huzom = None
+        huzom = pygame.sprite.spritecollideany(player, zombie_group)
+
         if attacker != None:
             if pygame.sprite.collide_circle_ratio(0.65)(player,attacker):
                 player_health +=2
                 food_group.remove(attacker)
+
+        if huzom != None:
+            if pygame.sprite.collide_circle_ratio(0.25)(player,huzom):
+                player_health -= 5
         if player_health > 100: player_health = 100
+
         #푸드 요정 팀 업데이트
         food_group.update(ticks, 50)
 
 
         if len(food_group) == 0:
             game_over = True
-<<<<<<< HEAD
-            
-=======
+        if player_health == 0:
+            game_over = True
 
->>>>>>> master
+
     #텔레비전 화면을 깨끗이 하다
     screen.fill((50,50,100))
 
@@ -196,11 +221,9 @@ while True:
 
     if game_over:
         print_text(font, 300, 100, "G A M E   O V E R")
-        # end = time.time()
-        # et = end -start
-        # et = format(et,"2f")
-        # print("시간: ",et,"초")
-    
+        end = time.time()
+        et = end -start
+        et = format(et,".2f")
+        print_text(font, 300, 0, "시간: {0}초".format(et))
     pygame.display.update()
     
-
