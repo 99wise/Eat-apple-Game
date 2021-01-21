@@ -129,7 +129,7 @@ while True:
         end = time.time()
         et = end -start
         et = format(et,"2f")
-        print_text(font, 300, 100, "시간: ", et,"초")
+        print_text(font, 300, 100, "시간: {0}초".format(et))
     
     pygame.display.update()
     
