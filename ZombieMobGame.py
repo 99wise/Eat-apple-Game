@@ -4,58 +4,37 @@ from MyLibrary import *
 
 def calc_velocity(direction, vel=1.0):
     velocity = Point(0,0)
-    if direction == 0: #上
+    if direction == 0: #위
         velocity.y = -vel
-    elif direction == 2: #右
+    elif direction == 2: #오른쪽
         velocity.x = vel
-    elif direction == 4: #下
+    elif direction == 4: #아래
         velocity.y = vel
-    elif direction == 6: #左
+    elif direction == 6: #왼쪽
         velocity.x = -vel
     return velocity
 
-def reverse_direction(sprite):
-    if sprite.direction == 0:
-        sprite.direction = 4
-    elif sprite.direction == 2:
-        sprite.direction = 6
-    elif sprite.direction == 4:
-        sprite.direction = 0
-    elif sprite.direction == 6:
-        sprite.direction = 2
-
-
 pygame.init()
 screen = pygame.display.set_mode((800,600))
-pygame.display.set_caption("吃苹果")
+pygame.display.set_caption("Apple Licker")
 font = pygame.font.Font(None, 36)
 timer = pygame.time.Clock()
 
-#创建精灵组
+#요정 팀 만들기
 player_group = pygame.sprite.Group()
 food_group = pygame.sprite.Group()
-npc_group = pygame.sprite.Group()
 
-#初始化玩家精灵组
+#게이머 마법사 그룹 초기화
 player = MySprite()
 player.load("farmer walk.png", 96, 96, 8)
 player.position = 80, 80
 player.direction = 4
 player_group.add(player)
 
-# 初始化NPC精灵组
-npc_image = pygame.image.load("zombie walk.png").convert_alpha()
-for n in range(0, 10):
-    npc = MySprite()
-    npc.load("zombie walk.png", 96, 96, 8)
-    npc.position = random.randint(0,700), random.randint(0,500)
-    npc.direction = random.randint(0,3) * 2
-    npc_group.add(npc)
-
-#初始化food精灵组
+#초기화 음식요정그룹
 
 for n in range(1,50):
-    food = MySprite();
+    food = MySprite()
     food.load("food_low.png", 35, 35, 1)
     food.position = random.randint(0,780),random.randint(0,580)
     food_group.add(food)
@@ -92,24 +71,24 @@ while True:
 
 
     if not game_over:
-        #根据角色的不同方向，使用不同的动画帧
+        #캐릭터의 다양한 방향에 따라, 각기 다른 애니메이션 프레임워크를 사용한다.
         player.first_frame = player.direction * player.columns
         player.last_frame = player.first_frame + player.columns-1
         if player.frame < player.first_frame:
             player.frame = player.first_frame
 
         if not player_moving:
-            #当停止按键（即人物停止移动的时候），停止更新动画帧
+            #버튼(인물이 이동하는 것을 멈출 때)을 멈추고 애니메이션 프레임 업데이트를 중단합니다
             player.frame = player.first_frame = player.last_frame
         else: 
             player.velocity = calc_velocity(player.direction, 1.5)
             player.velocity.x *= 1.5
             player.velocity.y *= 1.5
 
-        #更新玩家精灵组
+        #게이머 마법사 그룹 업데이트
         player_group.update(ticks, 50)
 
-        #移动玩家
+        #모바일 플레이어
         if player_moving:
             player.X += player.velocity.x
             player.Y += player.velocity.y
@@ -118,51 +97,27 @@ while True:
             if player.Y < 0: player.Y = 0
             elif player.Y > 500: player.Y = 500
 
-        #更新NPC
-        npc_group.update(ticks, 50)
-        for z in npc_group:
-            z.first_frame = z.direction * z.columns
-            z.last_frame = z.first_frame + z.columns - 1
-            if z.frame < z.first_frame:
-                z.frame = z.first_frame
-            z.velocity = calc_velocity(z.direction)
-
-            z.X += z.velocity.x
-            z.Y += z.velocity.y
-            if z.X < 0 or z.X > 700 or z.Y < 0 or z.Y > 500:
-                reverse_direction(z)
-
-        attacker = None
-        attacker = pygame.sprite.spritecollideany(player, npc_group)
-        if attacker != None:
-            if pygame.sprite.collide_rect_ratio(0.5)(player,attacker):
-                #遇到NPC直接gameover
-                game_over = True
-            else:
-                attacker = None
-
-        #检测玩家是否与食物冲突，是否吃到果实
+        #플레이어가 음식과 충돌하는지, 열매를 먹는지 검사합니다.
         attacker = None
         attacker = pygame.sprite.spritecollideany(player, food_group)
         if attacker != None:
             if pygame.sprite.collide_circle_ratio(0.65)(player,attacker):
-                player_health +=2;
-                food_group.remove(attacker);
+                player_health +=2
+                food_group.remove(attacker)
         if player_health > 100: player_health = 100
-        #更新食物精灵组
+        #푸드 요정 팀 업데이트
         food_group.update(ticks, 50)
 
         if len(food_group) == 0:
             game_over = True
-    #清屏
+    #텔레비전 화면을 깨끗이 하다
     screen.fill((50,50,100))
 
-    #绘制精灵
+    #요정을 그리다
     food_group.draw(screen)
-    npc_group.draw(screen)
     player_group.draw(screen)
 
-    #绘制玩家血量条
+    #플레이어 혈행 그리기
     pygame.draw.rect(screen, (50,150,50,180), Rect(300,570,player_health*2,25))
     pygame.draw.rect(screen, (100,200,100,180), Rect(300,570,200,25), 2)
 
