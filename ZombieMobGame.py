@@ -2,7 +2,13 @@
 from pygame.locals import *
 from MyLibrary import *
 import random
-import time
+import datetime
+import sqlite3
+
+conn = sqlite3.connect('C:/final/game.db', isolation_level=None)
+c = conn.cursor()
+
+c.execute("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, rectime text, regdate text)")
 
 def calc_velocity(direction, vel=1.0):
     velocity = Point(0,0)
@@ -66,15 +72,22 @@ player_moving = False
 player_health = 0
 zombie_moving = False
 
+#걸린 시간, 날짜 
+
+if True:
+    id = input("Ready? Input Your name>> ")             
+    user = GameUser(id)                     
+    user.user_info()    
 
 while True:
+    start = time.time()
     timer.tick(30)
     ticks = pygame.time.get_ticks()
 
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
-            sys.exit()
+            sys.exit()     
     keys = pygame.key.get_pressed()
     if keys[K_ESCAPE]: sys.exit()
     elif keys[K_UP]:
@@ -175,6 +188,7 @@ while True:
 
         if len(food_group) == 0:
             game_over = True
+            
 
     #텔레비전 화면을 깨끗이 하다
     screen.fill((50,50,100))
@@ -196,7 +210,14 @@ while True:
         # et = end -start
         # et = format(et,"2f")
         # print("시간: ",et,"초")
+        end = time.time()
+        et = end -start
+        et = format(et,"2f")
+        print_text(font, 300, -300, "시간: {0}초".format(et))
+
+        c.execute("INSERT INTO users (id, rectime, regdate) VALUES(?,?,?,?,?,?)",(id, et, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+
+        c.close()
     
     pygame.display.update()
     
-
