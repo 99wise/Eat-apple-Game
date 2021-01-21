@@ -1,4 +1,5 @@
 ﻿import itertools, sys, time, random, math, pygame
+import winsound
 from pygame.locals import *
 from MyLibrary import *
 import random
@@ -168,9 +169,11 @@ while True:
             if pygame.sprite.collide_circle_ratio(0.65)(player,attacker):
                 player_health +=2
                 food_group.remove(attacker)
+                winsound.PlaySound('C:\\Users\\with1\\Downloads\\f\\사과먹는+소리.wav', winsound.SND_FILENAME)
         if player_health > 100: player_health = 100
         #푸드 요정 팀 업데이트
         food_group.update(ticks, 50)
+       
 
 
         if len(food_group) == 0:
