@@ -36,6 +36,7 @@ timer = pygame.time.Clock()
 #요정 팀 만들기
 player_group = pygame.sprite.Group()
 food_group = pygame.sprite.Group()
+larva_group = pygame.sprite.Group()
 
 #게이머 마법사 그룹 초기화
 player = MySprite()
@@ -43,6 +44,13 @@ player.load("farmer walk.png", 96, 96, 8)
 player.position = 80, 80
 player.direction = 4
 player_group.add(player)
+
+
+for n in range(1,3):
+    larva = MySprite()
+    larva.load("larva.png", 40, 40, 1)
+    larva.position = random.randint(0,780),random.randint(0,580)
+    larva_group.add(larva)
 
 #초기화 음식요정그룹
 
@@ -129,6 +137,7 @@ while True:
     #요정을 그리다
     food_group.draw(screen)
     player_group.draw(screen)
+    larva_group.draw(screen)
 
     #플레이어 혈행 그리기
     pygame.draw.rect(screen, (50,150,50,180), Rect(300,570,player_health*2,25))
@@ -136,10 +145,10 @@ while True:
 
     if game_over:
         print_text(font, 300, 100, "G A M E   O V E R")
-        end = time.time()
-        et = end -start
-        et = format(et,"2f")
-        print("시간: ",et,"초")
+        # end = time.time()
+        # et = end -start
+        # et = format(et,"2f")
+        # print("시간: ",et,"초")
     
     pygame.display.update()
     
