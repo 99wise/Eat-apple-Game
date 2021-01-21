@@ -121,11 +121,13 @@ while True:
                 player_health +=2
                 food_group.remove(attacker)
         if player_health > 100: player_health = 100
+
         #푸드 요정 팀 업데이트
         food_group.update(ticks, 50)
 
         if len(food_group) == 0:
             game_over = True
+
     #텔레비전 화면을 깨끗이 하다
     screen.fill((50,50,100))
 
@@ -141,7 +143,7 @@ while True:
         print_text(font, 300, 100, "G A M E   O V E R")
         end = time.time()
         et = end -start
-        et = format(et,"2f")
+        et = format(et,".2f")
         print_text(font, 300, -300, "시간: {0}초".format(et))
 
         c.execute("INSERT INTO users (id, rectime, regdate) VALUES(?,?,?,?,?,?)",(id, et, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
