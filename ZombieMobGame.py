@@ -1,6 +1,8 @@
 ﻿import itertools, sys, time, random, math, pygame
 from pygame.locals import *
 from MyLibrary import *
+import random
+import time
 
 def calc_velocity(direction, vel=1.0):
     velocity = Point(0,0)
@@ -24,7 +26,7 @@ def reverse_direction(sprite):
     elif sprite.direction == 6:
         sprite.direction = 2
 
-
+start = time.time()
 pygame.init()
 screen = pygame.display.set_mode((800,600))
 pygame.display.set_caption("吃苹果")
@@ -168,6 +170,10 @@ while True:
 
     if game_over:
         print_text(font, 300, 100, "G A M E   O V E R")
+        end = time.time()
+        et = end -start
+        et = format(et,"2f")
+        print("시간: ",et,"초")
     
     pygame.display.update()
     
