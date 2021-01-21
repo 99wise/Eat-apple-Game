@@ -1,5 +1,4 @@
 ﻿import itertools, sys, time, random, math, pygame
-import winsound
 from pygame.locals import *
 from MyLibrary import *
 import random
@@ -33,7 +32,6 @@ def reverse_direction(sprite):
     elif sprite.direction == 6:
         sprite.direction = 2
 
-start = time.time()
 pygame.init()
 screen = pygame.display.set_mode((800,600))
 pygame.display.set_caption("Apple Licker")
@@ -43,6 +41,17 @@ timer = pygame.time.Clock()
 player_group = pygame.sprite.Group()
 food_group = pygame.sprite.Group()
 zombie_group = pygame.sprite.Group()
+potion_group = pygame.sprite.Group()
+
+apple = pygame.mixer.Sound("apple.wav")
+apple.set_volume(0.8)
+
+rrrou = pygame.mixer.Sound("rrrou.wav")
+rrrou.set_volume(0.8)
+
+woohoo = pygame.mixer.Sound("woohoo.wav")
+woohoo.set_volume(0.8)
+
 
 #player 초기화
 player = MySprite()
@@ -65,13 +74,18 @@ for n in range(1,50):
     food.position = random.randint(0,780),random.randint(0,580)
     food_group.add(food)
 
+for k in range(1,3):
+    potion = MySprite()
+    potion.load("potion.png", 60, 60, 1)
+    potion.position = random.randint(0,780),random.randint(0,580)
+    potion_group.add(potion)
+
 game_over = False
 player_moving = False
 player_health = 0.1
 zombie_moving = False
 
 #걸린 시간, 날짜 
-
 if True:
     user_name = input("Ready? Input Your name>> ")             
     user = GameUser(user_name)                     
@@ -142,8 +156,8 @@ while True:
             player.frame = player.first_frame = player.last_frame
         else: 
             player.velocity = calc_velocity(player.direction, 2)
-            player.velocity.x *= 10
-            player.velocity.y *= 10
+            player.velocity.x *= 4
+            player.velocity.y *= 4
 
             
         if not zombie_moving:
@@ -167,7 +181,6 @@ while True:
             if player.Y < 0: player.Y = 0
             elif player.Y > 500: player.Y = 500
 
-        #좀비 플레이어
         if zombie_moving:
             zombie.X += zombie.velocity.x
             zombie.Y += zombie.velocity.y
@@ -181,60 +194,50 @@ while True:
         attacker = pygame.sprite.spritecollideany(player, food_group)
         huzom = None
         huzom = pygame.sprite.spritecollideany(player, zombie_group)
+        poon = None
+        poon = pygame.sprite.spritecollideany(player, potion_group)
 
         if attacker != None:
             if pygame.sprite.collide_circle_ratio(0.65)(player,attacker):
-                winsound.PlaySound('C:\\Users\\with1\\Downloads\\f\\사과먹는+소리.wav', winsound.SND_FILENAME)
                 player_health +=2
-                
                 food_group.remove(attacker)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 02c9bea2d2d5f8e3f8493af3ebaf177c654465ad
+                apple.play()
 
         if huzom != None:
             if pygame.sprite.collide_circle_ratio(0.25)(player,huzom):
-                player_health -= 5
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-                
->>>>>>> origin/jieun
-=======
-=======
->>>>>>> juhui
-                screen.fill((55,84,34))
->>>>>>> 02c9bea2d2d5f8e3f8493af3ebaf177c654465ad
+                player_health -= 3
+                rrrou.play()
         if player_health > 100: player_health = 100
+
+        if poon != None:
+            if pygame.sprite.collide_circle_ratio(0.65)(player,poon):
+                player.velocity = calc_velocity(player.direction, 2)
+                player.X *= player.velocity.x
+                player.Y *= player.velocity.y
+                potion_group.remove(poon)
+                woohoo.play()
+
 
         #푸드 요정 팀 업데이트
         food_group.update(ticks, 50)
-<<<<<<< HEAD
-       
-=======
->>>>>>> juhui
+        potion_group.update(ticks, 50)
 
         if len(food_group) == 0:
             game_over = True
-        if player_health == 0:
+        if player_health < 0.1:
             game_over = True
             
 
-    #텔레비전 화면을 깨끗이 하다
-<<<<<<< HEAD
-    screen.fill((55,55,50))
-=======
+    #배경색
     screen.fill((40,0,100))
->>>>>>> 02c9bea2d2d5f8e3f8493af3ebaf177c654465ad
 
     #요정을 그리다
     food_group.draw(screen)
     player_group.draw(screen)
     zombie_group.draw(screen)
+    potion_group.draw(screen)
 
-
-    #플레이어 혈행 그리기
+    #player 게이지 그리기
     pygame.draw.rect(screen, (50,150,50,180), Rect(300,570,player_health*2,25))
     pygame.draw.rect(screen, (100,200,100,180), Rect(300,570,200,25), 2)
 
@@ -243,27 +246,10 @@ while True:
         end = time.time()
         et = end -start
         et = format(et,".2f")
-<<<<<<< HEAD
-<<<<<<< HEAD
-        print_text(font, 300, 0, "시간: {0}초".format(et))
-=======
-        print_text(font, 300, 0, "time: {0}sec".format(et))
+        print_text(font, 300, 0, "time: {0} sec".format(et))
 
         c.execute("INSERT INTO users (name, rectime, regdate) VALUES(?,?,?)",(user_name, et, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
         c.close()
->>>>>>> juhui
-=======
-        print_text(font, 300, 0, "time : {0} sec".format(et))
-
-        c.execute("INSERT INTO users (name, rectime, regdate) VALUES(?,?,?)",(user_name, et, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
->>>>>>> 02c9bea2d2d5f8e3f8493af3ebaf177c654465ad
-
-        c.execute("INSERT INTO users (name, rectime, regdate) VALUES(?,?,?)",(user_name, et, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-        c.close()
-<<<<<<< HEAD
-=======
-        conn.close()
->>>>>>> 02c9bea2d2d5f8e3f8493af3ebaf177c654465ad
         
     pygame.display.update()
     
